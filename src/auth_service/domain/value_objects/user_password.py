@@ -9,20 +9,20 @@ class UserPassword:
     def __post_init__(self) -> None:
         if not self.value:
             raise UserPasswordError(
-                login=self.value, msg="password must not be empty"
+                password=self.value, msg="password must not be empty"
             )
 
         if len(self.value) < 3:
             raise UserPasswordError(
-                login=self.value, msg="password is too short"
+                password=self.value, msg="password is too short"
             )
 
-        if len(self.value > 15):
+        if len(self.value) > 15:
             raise UserPasswordError(
-                login=self.value, msg="password is too long"
+                password=self.value, msg="password is too long"
             )
 
         if not self.value.isalnum():
             raise UserPasswordError(
-                login=self.value, msg="password must be alphanumeric"
+                password=self.value, msg="password must be alphanumeric"
             )

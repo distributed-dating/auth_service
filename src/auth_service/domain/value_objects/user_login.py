@@ -15,7 +15,7 @@ class UserLogin:
         if len(self.value) < 3:
             raise UserLoginError(login=self.value, msg="login is too short")
 
-        if len(self.value > 15):
+        if len(self.value) > 15:
             raise UserLoginError(login=self.value, msg="login is too long")
 
         if not self.value.isalnum():
