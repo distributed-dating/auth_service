@@ -4,6 +4,11 @@ from uuid import uuid4
 import pytest
 
 from auth_service.domain.models import User, RefreshToken
+from auth_service.domain.events import (
+    UserCreatedEvent,
+    UserActivatedEvent,
+    UserDeactivatedEvent,
+)
 from auth_service.domain.value_objects.user import (
     UserId,
     UserLogin,
@@ -123,6 +128,129 @@ class TestUser:
         user.deactivate()
 
         assert user.updated_at >= old_updated_at
+
+    # ===== Domain Events Tests =====
+
+    def test_create_user_registers_created_event(
+        self, valid_login: UserLogin, valid_hashed_password: HashedPassword
+    ) -> None:
+        """User.create() should register UserCreatedEvent."""
+        user = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
+
+        events = user.peek_events()
+        assert len(events) == 1
+        assert isinstance(events[0], UserCreatedEvent)
+        assert events[0].user_id == user.id.value
+        assert events[0].login == valid_login.value
+
+    def test_deactivate_registers_deactivated_event(
+        self, valid_login: UserLogin, valid_hashed_password: HashedPassword
+    ) -> None:
+        """User.deactivate() should register UserDeactivatedEvent."""
+        user = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
+        user.pull_events()  # Clear creation event
+
+        user.deactivate(reason="Test reason")
+
+        events = user.peek_events()
+        assert len(events) == 1
+        assert isinstance(events[0], UserDeactivatedEvent)
+        assert events[0].user_id == user.id.value
+        assert events[0].reason == "Test reason"
+
+    def test_deactivate_is_idempotent_no_duplicate_events(
+        self, valid_login: UserLogin, valid_hashed_password: HashedPassword
+    ) -> None:
+        """Repeated deactivate() should not create duplicate events."""
+        user = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
+        user.pull_events()  # Clear creation event
+
+        user.deactivate()
+        user.deactivate()  # Second call should be no-op
+
+        events = user.peek_events()
+        assert len(events) == 1
+
+    def test_activate_registers_activated_event(
+        self, valid_login: UserLogin, valid_hashed_password: HashedPassword
+    ) -> None:
+        """User.activate() should register UserActivatedEvent."""
+        user = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
+        user.deactivate()
+        user.pull_events()  # Clear previous events
+
+        user.activate()
+
+        events = user.peek_events()
+        assert len(events) == 1
+        assert isinstance(events[0], UserActivatedEvent)
+        assert events[0].user_id == user.id.value
+
+    def test_activate_is_idempotent_no_duplicate_events(
+        self, valid_login: UserLogin, valid_hashed_password: HashedPassword
+    ) -> None:
+        """Repeated activate() should not create duplicate events."""
+        user = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
+        user.pull_events()  # Clear creation event
+
+        user.activate()  # Already active, should be no-op
+        user.activate()
+
+        events = user.peek_events()
+        assert len(events) == 0
+
+    def test_pull_events_clears_events(
+        self, valid_login: UserLogin, valid_hashed_password: HashedPassword
+    ) -> None:
+        """pull_events() should return and clear all events."""
+        user = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
+
+        events = user.pull_events()
+        assert len(events) == 1
+
+        # Events should be cleared
+        assert user.peek_events() == []
+        assert user.has_pending_events is False
+
+    def test_peek_events_does_not_clear_events(
+        self, valid_login: UserLogin, valid_hashed_password: HashedPassword
+    ) -> None:
+        """peek_events() should not clear events."""
+        user = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
+
+        events1 = user.peek_events()
+        events2 = user.peek_events()
+
+        assert len(events1) == 1
+        assert len(events2) == 1
+        assert user.has_pending_events is True
+
+    def test_has_pending_events_property(
+        self, valid_login: UserLogin, valid_hashed_password: HashedPassword
+    ) -> None:
+        """has_pending_events should reflect events state."""
+        user = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
+        assert user.has_pending_events is True
+
+        user.pull_events()
+        assert user.has_pending_events is False
+
 
 class TestRefreshToken:
     """Tests for RefreshToken Entity."""

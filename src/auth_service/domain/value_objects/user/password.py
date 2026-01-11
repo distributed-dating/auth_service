@@ -33,4 +33,3 @@ class UserPassword:
                 password="***",
                 msg="password must contain uppercase, lowercase and digit",
             )
-
