@@ -14,7 +14,6 @@ from auth_service.domain.value_objects.jwt import (
     RefreshTokenValue,
 )
 from auth_service.domain.exceptions import (
-    TokenExpiredError,
     TokenRevokedError,
     InvalidTokenTypeError,
 )

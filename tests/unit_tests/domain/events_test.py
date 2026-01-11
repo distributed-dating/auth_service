@@ -6,8 +6,6 @@ from uuid import UUID, uuid4
 import pytest
 
 from auth_service.domain.events import (
-    DomainEvent,
-    UserEvent,
     UserCreatedEvent,
     UserActivatedEvent,
     UserDeactivatedEvent,

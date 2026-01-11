@@ -27,6 +27,7 @@ class TestUser:
     @pytest.fixture
     def valid_hashed_password(self) -> HashedPassword:
         """Fixture for valid hashed password."""
+
         return HashedPassword(
             value="$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/X4baN7f3v1f1h1Q1."
         )

@@ -1,3 +1,4 @@
-__all__ = ["User"]
+__all__ = ["UserDTO", "TokenPairDTO"]
 
-from .user import User
+from .user import UserDTO
+from .token import TokenPairDTO

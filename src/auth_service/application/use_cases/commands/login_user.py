@@ -2,8 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class RegisterUserCommand:
-    """Command for user register"""
-
+class UserLoginCommand:
     login: str
     password: str

@@ -1,4 +1,4 @@
-from auth_service.application.dto.user import UserDTO
+from auth_service.application.dto import UserDTO
 from auth_service.domain import (
     EventPublisher,
     UserRepository,
