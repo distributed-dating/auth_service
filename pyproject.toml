@@ -11,6 +11,7 @@ dependencies = [
 dev = [
     "ruff>=0.14.11",
     "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
 ]
 
 [build-system]
@@ -19,6 +20,6 @@ build-backend = "uv_build"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-python_files = ["test_*.py", "*_test.py", "*_tests.py"]  # добавить паттерн
+python_files = ["test_*.py", "*_test.py", "*_tests.py"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"

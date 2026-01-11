@@ -15,9 +15,9 @@ class RefreshToken:
 
     id: UUID
     user_id: UserId
-    token_hash: str           # Хеш refresh токена (не сам токен!)
+    token_hash: str  # Хеш refresh токена (не сам токен!)
     expires_at: datetime
-    created_at: datetime = field(default_factory=datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     revoked_at: datetime | None = None
 
     @classmethod
@@ -40,7 +40,7 @@ class RefreshToken:
 
     @property
     def is_expired(self) -> bool:
-        return datetime.utcnow() > self.expires_at
+        return datetime.now(timezone.utc) > self.expires_at
 
     @property
     def is_valid(self) -> bool:
@@ -49,4 +49,4 @@ class RefreshToken:
     def revoke(self) -> None:
         """Отозвать токен."""
         if self.revoked_at is None:
-            self.revoked_at = datetime.utcnow()
+            self.revoked_at = datetime.now(timezone.utc)

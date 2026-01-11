@@ -1,15 +1,15 @@
 __all__ = [
     # User
-    UserId,
-    UserLogin,
-    UserPassword,
-    HashedPassword,
+    "UserId",
+    "UserLogin",
+    "UserPassword",
+    "HashedPassword",
     # JWT
-    TokenPair,
-    TokenPayload,
-    TokenType,
-    AccessToken,
-    RefreshTokenValue
+    "TokenPair",
+    "TokenPayload",
+    "TokenType",
+    "AccessToken",
+    "RefreshTokenValue",
 ]
 
 from .user import UserId, UserLogin, UserPassword, HashedPassword
