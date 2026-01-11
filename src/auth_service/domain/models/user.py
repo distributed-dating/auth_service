@@ -17,7 +17,7 @@ from auth_service.domain.value_objects.user import (
 from auth_service.domain.events.base import DomainEvent
 
 
-@dataclass
+@dataclass(kw_only=True)
 class User:
     """
     User Aggregate Root.

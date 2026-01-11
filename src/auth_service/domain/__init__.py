@@ -19,6 +19,7 @@ __all__ = [
     "JwtProvider",
     # Services
     "TokenService",
+    "EventPublisher",
 ]
 
 from .models import User, RefreshToken
@@ -30,5 +31,12 @@ from .value_objects.jwt import (
     RefreshTokenValue,
     TokenType,
 )
-from .ports import UserRepository, TokenRepository, PasswordHasher, JwtProvider
+from .ports import (
+    UserRepository,
+    TokenRepository,
+    PasswordHasher,
+    JwtProvider,
+    EventPublisher,
+)
 from .services.token_service import TokenService
+from .exceptions import *

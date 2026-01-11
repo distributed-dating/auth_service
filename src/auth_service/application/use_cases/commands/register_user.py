@@ -1,0 +1,9 @@
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class RegisterUserCommand:
+    """Команда регистрации пользователя."""
+
+    login: str
+    password: str
