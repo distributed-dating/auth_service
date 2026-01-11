@@ -12,7 +12,6 @@ from auth_service.domain.value_objects.user import (
 @dataclass
 class User:
     """User Aggregate Root."""
-
     id: UserId
     login: UserLogin
     hashed_password: HashedPassword

@@ -124,7 +124,6 @@ class TestUser:
 
         assert user.updated_at >= old_updated_at
 
-
 class TestRefreshToken:
     """Tests for RefreshToken Entity."""
 

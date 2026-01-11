@@ -146,10 +146,10 @@ class TestUserPassword:
         assert password.value == "Abcdefg1"
 
     def test_create_valid_password_max_length(self) -> None:
-        """Creating password maximum length (128 characters)."""
-        password = UserPassword(value="Aa1" + "a" * 125)
+        """Creating password maximum length (20 characters)."""
+        password = UserPassword(value="Aa1" + "a" * 17)
 
-        assert len(password.value) == 128
+        assert len(password.value) == 20
 
     def test_create_empty_password_raises_error(self) -> None:
         """Empty password raises error."""

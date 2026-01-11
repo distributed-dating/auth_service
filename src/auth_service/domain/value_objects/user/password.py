@@ -19,12 +19,11 @@ class UserPassword:
                 password="***", msg="password is too short (min 8)"
             )
 
-        if len(self.value) > 128:
+        if len(self.value) > 20:
             raise UserPasswordError(
-                password="***", msg="password is too long (max 128)"
+                password="***", msg="password is too long (max 20)"
             )
 
-        # Password complexity check
         has_upper = any(c.isupper() for c in self.value)
         has_lower = any(c.islower() for c in self.value)
         has_digit = any(c.isdigit() for c in self.value)
@@ -34,3 +33,4 @@ class UserPassword:
                 password="***",
                 msg="password must contain uppercase, lowercase and digit",
             )
+
