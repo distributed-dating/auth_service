@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from auth_service.domain.exceptions import UserLoginError
 
 
-@dataclass
+@dataclass(frozen=True, slots=True)
 class UserLogin:
     value: str
 

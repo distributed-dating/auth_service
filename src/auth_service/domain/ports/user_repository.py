@@ -1,9 +1,28 @@
 from typing import Protocol
 
-from auth_service.domain import User
+from auth_service.domain.models import User
+from auth_service.domain.value_objects.user import UserId, UserLogin
 
 
 class UserRepository(Protocol):
-    def register(user: User) -> None: ...
+    """Порт для работы с пользователями."""
 
-    def change_password(user: User) -> None: ...
+    async def add(self, user: User) -> None:
+        """Добавить нового пользователя."""
+        ...
+
+    async def get_by_id(self, user_id: UserId) -> User | None:
+        """Получить пользователя по ID."""
+        ...
+
+    async def get_by_login(self, login: UserLogin) -> User | None:
+        """Получить пользователя по логину."""
+        ...
+
+    async def update(self, user: User) -> None:
+        """Обновить данные пользователя."""
+        ...
+
+    async def exists_by_login(self, login: UserLogin) -> bool:
+        """Проверить существование пользователя по логину."""
+        ...
