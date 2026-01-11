@@ -1,5 +1,3 @@
-"""Unit тесты для Domain Services."""
-
 from datetime import datetime, timezone, timedelta
 from uuid import uuid4
 
@@ -23,13 +21,13 @@ from auth_service.domain.exceptions import (
 
 
 class FakeJwtProvider:
-    """Фейковая реализация JwtProvider для тестов."""
+    """Fake implementation JwtProvider for tests."""
 
     def __init__(self) -> None:
         self.created_pairs: list[tuple[UserId, TokenPair]] = []
 
     def create_token_pair(self, user_id: UserId) -> TokenPair:
-        """Создаёт фейковую пару токенов."""
+        """Creates fake token pair."""
         access = AccessToken(
             value=f"access_{user_id.value}_{uuid4().hex[:8]}",
             expires_at=datetime.now(timezone.utc) + timedelta(hours=1),
@@ -43,10 +41,10 @@ class FakeJwtProvider:
         return pair
 
     def decode_access_token(self, token: str) -> TokenPayload:
-        """Декодирует фейковый access токен."""
+        """Decodes fake access token."""
         if token.startswith("access_"):
             parts = token.split("_")
-            user_id = uuid4()  # В реальности извлекается из токена
+            user_id = uuid4()  # In reality extracted from token
             return TokenPayload(
                 sub=user_id,
                 token_type=TokenType.ACCESS,
@@ -63,7 +61,7 @@ class FakeJwtProvider:
         raise ValueError("Invalid token format")
 
     def decode_refresh_token(self, token: str) -> TokenPayload:
-        """Декодирует фейковый refresh токен."""
+        """Decodes fake refresh token."""
         if token.startswith("refresh_"):
             user_id = uuid4()
             return TokenPayload(
@@ -83,46 +81,49 @@ class FakeJwtProvider:
         raise ValueError("Invalid token format")
 
     def hash_token(self, token: str) -> str:
-        """Возвращает хеш токена."""
+        """Returns token hash."""
         return f"hashed_{token}"
 
 
 class FakeTokenRepository:
-    """Фейковая реализация TokenRepository для тестов."""
+    """Fake implementation TokenRepository for tests."""
 
     def __init__(self) -> None:
         self.tokens: dict[str, RefreshToken] = {}
         self.revoked_all_calls: list[UserId] = []
 
     async def add(self, token: RefreshToken) -> None:
-        """Сохраняет токен."""
+        """Saves token."""
         self.tokens[token.token_hash] = token
 
     async def get_by_hash(self, token_hash: str) -> RefreshToken | None:
-        """Получает токен по хешу."""
+        """Gets token by hash."""
         return self.tokens.get(token_hash)
 
-    async def get_active_by_user_id(self, user_id: UserId) -> list[RefreshToken]:
-        """Получает активные токены пользователя."""
+    async def get_active_by_user_id(
+        self, user_id: UserId
+    ) -> list[RefreshToken]:
+        """Gets active user tokens."""
         return [
-            t for t in self.tokens.values()
+            t
+            for t in self.tokens.values()
             if t.user_id == user_id and t.is_valid
         ]
 
     async def revoke(self, token: RefreshToken) -> None:
-        """Отзывает токен."""
+        """Revokes token."""
         if token.token_hash in self.tokens:
             self.tokens[token.token_hash] = token
 
     async def revoke_all_by_user_id(self, user_id: UserId) -> None:
-        """Отзывает все токены пользователя."""
+        """Revokes all user tokens."""
         self.revoked_all_calls.append(user_id)
         for token in self.tokens.values():
             if token.user_id == user_id:
                 token.revoke()
 
     async def delete_expired(self) -> int:
-        """Удаляет истёкшие токены."""
+        """Deletes expired tokens."""
         expired = [h for h, t in self.tokens.items() if t.is_expired]
         for h in expired:
             del self.tokens[h]
@@ -130,23 +131,25 @@ class FakeTokenRepository:
 
 
 class TestTokenService:
-    """Тесты для TokenService."""
+    """Tests for TokenService."""
 
     @pytest.fixture
     def jwt_provider(self) -> FakeJwtProvider:
-        """Фикстура для FakeJwtProvider."""
+        """Fixture for FakeJwtProvider."""
         return FakeJwtProvider()
 
     @pytest.fixture
     def token_repository(self) -> FakeTokenRepository:
-        """Фикстура для FakeTokenRepository."""
+        """Fixture for FakeTokenRepository."""
         return FakeTokenRepository()
 
     @pytest.fixture
     def token_service(
-        self, jwt_provider: FakeJwtProvider, token_repository: FakeTokenRepository
+        self,
+        jwt_provider: FakeJwtProvider,
+        token_repository: FakeTokenRepository,
     ) -> TokenService:
-        """Фикстура для TokenService."""
+        """Fixture for TokenService."""
         return TokenService(
             jwt_provider=jwt_provider,
             token_repository=token_repository,
@@ -154,7 +157,7 @@ class TestTokenService:
 
     @pytest.fixture
     def user_id(self) -> UserId:
-        """Фикстура для UserId."""
+        """Fixture for UserId."""
         return UserId(value=uuid4())
 
     @pytest.mark.asyncio
@@ -164,7 +167,7 @@ class TestTokenService:
         jwt_provider: FakeJwtProvider,
         user_id: UserId,
     ) -> None:
-        """issue_tokens создаёт пару токенов."""
+        """issue_tokens creates token pair."""
         token_pair = await token_service.issue_tokens(user_id)
 
         assert token_pair.access_token is not None
@@ -178,7 +181,7 @@ class TestTokenService:
         token_repository: FakeTokenRepository,
         user_id: UserId,
     ) -> None:
-        """issue_tokens сохраняет refresh токен в репозитории."""
+        """issue_tokens saves refresh token in repository."""
         token_pair = await token_service.issue_tokens(user_id)
 
         expected_hash = f"hashed_{token_pair.refresh_token.value}"
@@ -191,7 +194,7 @@ class TestTokenService:
         token_repository: FakeTokenRepository,
         user_id: UserId,
     ) -> None:
-        """revoke_token отзывает токен."""
+        """revoke_token revokes token."""
         token_pair = await token_service.issue_tokens(user_id)
         refresh_token = token_pair.refresh_token.value
 
@@ -208,7 +211,7 @@ class TestTokenService:
         token_repository: FakeTokenRepository,
         user_id: UserId,
     ) -> None:
-        """revoke_all_user_tokens отзывает все токены пользователя."""
+        """revoke_all_user_tokens revokes all user tokens."""
         await token_service.revoke_all_user_tokens(user_id)
 
         assert user_id in token_repository.revoked_all_calls
@@ -219,7 +222,7 @@ class TestTokenService:
         token_service: TokenService,
         jwt_provider: FakeJwtProvider,
     ) -> None:
-        """validate_access_token возвращает payload для валидного токена."""
+        """validate_access_token returns payload for valid token."""
         access_token = "access_test_token"
 
         payload = token_service.validate_access_token(access_token)
@@ -231,7 +234,7 @@ class TestTokenService:
         self,
         token_service: TokenService,
     ) -> None:
-        """validate_access_token отклоняет refresh токен."""
+        """validate_access_token rejects refresh token."""
         refresh_token = "refresh_test_token"
 
         with pytest.raises(InvalidTokenTypeError) as exc_info:
@@ -242,16 +245,16 @@ class TestTokenService:
 
 
 class TestTokenServiceRefreshTokens:
-    """Тесты для TokenService.refresh_tokens."""
+    """Tests for TokenService.refresh_tokens."""
 
     @pytest.fixture
     def user_id(self) -> UserId:
-        """Фикстура для UserId."""
+        """Fixture for UserId."""
         return UserId(value=uuid4())
 
     @pytest.mark.asyncio
     async def test_refresh_tokens_with_access_token_raises_error(self) -> None:
-        """refresh_tokens с access токеном выбрасывает ошибку."""
+        """refresh_tokens with access token raises error."""
         jwt_provider = FakeJwtProvider()
         token_repository = FakeTokenRepository()
         token_service = TokenService(jwt_provider, token_repository)
@@ -262,8 +265,10 @@ class TestTokenServiceRefreshTokens:
             await token_service.refresh_tokens(access_token)
 
     @pytest.mark.asyncio
-    async def test_refresh_tokens_with_unknown_token_raises_revoked(self) -> None:
-        """refresh_tokens с неизвестным токеном выбрасывает TokenRevokedError."""
+    async def test_refresh_tokens_with_unknown_token_raises_revoked(
+        self,
+    ) -> None:
+        """refresh_tokens with unknown token raises TokenRevokedError."""
         jwt_provider = FakeJwtProvider()
         token_repository = FakeTokenRepository()
         token_service = TokenService(jwt_provider, token_repository)

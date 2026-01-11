@@ -2,12 +2,13 @@ from .base_domain import DomainError
 
 
 class TokenError(DomainError):
-    """Базовая ошибка токена."""
+    """Base token error."""
+
     pass
 
 
 class InvalidTokenError(TokenError):
-    """Невалидный токен (неверная подпись, формат и т.д.)."""
+    """Invalid token (wrong signature, format, etc.)."""
 
     def __init__(self, reason: str = "Invalid token"):
         self.reason = reason
@@ -15,21 +16,21 @@ class InvalidTokenError(TokenError):
 
 
 class TokenExpiredError(TokenError):
-    """Токен истёк."""
+    """Token has expired."""
 
     def __init__(self):
         super().__init__("Token has expired")
 
 
 class TokenRevokedError(TokenError):
-    """Токен был отозван."""
+    """Token has been revoked."""
 
     def __init__(self):
         super().__init__("Token has been revoked")
 
 
 class InvalidTokenTypeError(TokenError):
-    """Неверный тип токена (access вместо refresh или наоборот)."""
+    """Invalid token type (access instead of refresh or vice versa)."""
 
     def __init__(self, expected: str, actual: str):
         self.expected = expected

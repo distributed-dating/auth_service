@@ -5,32 +5,32 @@ from auth_service.domain.value_objects.jwt import TokenPair, TokenPayload
 
 
 class JwtProvider(Protocol):
-    """Порт для работы с JWT токенами."""
+    """Port for JWT token operations."""
 
     def create_token_pair(self, user_id: UserId) -> TokenPair:
-        """Создать пару access + refresh токенов."""
+        """Create a pair of access + refresh tokens."""
         ...
 
     def decode_access_token(self, token: str) -> TokenPayload:
         """
-        Декодировать и валидировать access токен.
+        Decode and validate access token.
 
         Raises:
-            InvalidTokenError: Если токен невалиден
-            TokenExpiredError: Если токен истёк
+            InvalidTokenError: If token is invalid
+            TokenExpiredError: If token has expired
         """
         ...
 
     def decode_refresh_token(self, token: str) -> TokenPayload:
         """
-        Декодировать и валидировать refresh токен.
+        Decode and validate refresh token.
 
         Raises:
-            InvalidTokenError: Если токен невалиден
-            TokenExpiredError: Если токен истёк
+            InvalidTokenError: If token is invalid
+            TokenExpiredError: If token has expired
         """
         ...
 
     def hash_token(self, token: str) -> str:
-        """Получить хеш токена для хранения в БД."""
+        """Get token hash for database storage."""
         ...

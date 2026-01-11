@@ -10,7 +10,7 @@ class TokenType(str, Enum):
 
 @dataclass(frozen=True, slots=True)
 class AccessToken:
-    """Access JWT токен для аутентификации запросов."""
+    """Access JWT token for request authentication."""
 
     value: str
     expires_at: datetime
@@ -24,7 +24,7 @@ class AccessToken:
 
 @dataclass(frozen=True, slots=True)
 class RefreshTokenValue:
-    """Refresh JWT токен для обновления access токена."""
+    """Refresh JWT token for refreshing access token."""
 
     value: str
     expires_at: datetime
@@ -35,7 +35,7 @@ class RefreshTokenValue:
 
 @dataclass(frozen=True, slots=True)
 class TokenPair:
-    """Пара токенов, выдаваемая при аутентификации."""
+    """Token pair issued during authentication."""
 
     access_token: AccessToken
     refresh_token: RefreshTokenValue

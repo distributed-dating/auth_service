@@ -10,14 +10,16 @@ class RefreshToken:
     """
     Refresh Token Entity.
 
-    Хранится в БД для возможности отзыва токенов.
+    Stored in the database to enable token revocation.
     """
 
     id: UUID
     user_id: UserId
-    token_hash: str  # Хеш refresh токена (не сам токен!)
+    token_hash: str  # Hash of the refresh token (not the token itself!)
     expires_at: datetime
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(
+        default_factory=lambda: datetime.now(timezone.utc)
+    )
     revoked_at: datetime | None = None
 
     @classmethod
@@ -47,6 +49,6 @@ class RefreshToken:
         return not self.is_revoked and not self.is_expired
 
     def revoke(self) -> None:
-        """Отозвать токен."""
+        """Revoke the token."""
         if self.revoked_at is None:
             self.revoked_at = datetime.now(timezone.utc)

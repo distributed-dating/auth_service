@@ -7,13 +7,13 @@ from auth_service.domain.value_objects.jwt.token import TokenType
 
 @dataclass(frozen=True, slots=True)
 class TokenPayload:
-    """Payload JWT токена (claims)."""
+    """Payload JWT token (claims)."""
 
     sub: UUID  # subject (user_id)
-    token_type: TokenType  # access или refresh
+    token_type: TokenType  # access or refresh
     exp: datetime  # expiration time
     iat: datetime  # issued at
-    jti: str | None = None  # JWT ID (для refresh токенов, чтобы отзывать)
+    jti: str | None = None  # JWT ID (for refresh tokens to enable revocation)
 
     @property
     def user_id(self) -> UUID:

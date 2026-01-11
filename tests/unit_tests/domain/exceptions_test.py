@@ -1,5 +1,3 @@
-"""Unit тесты для Domain Exceptions."""
-
 import pytest
 
 from auth_service.domain.exceptions import (
@@ -18,183 +16,183 @@ from auth_service.domain.exceptions import (
 
 
 class TestDomainError:
-    """Тесты для базового DomainError."""
+    """Tests for base DomainError."""
 
     def test_is_exception(self) -> None:
-        """DomainError является исключением."""
+        """DomainError is an exception."""
         error = DomainError()
         assert isinstance(error, Exception)
 
     def test_can_be_raised_and_caught(self) -> None:
-        """DomainError можно выбросить и поймать."""
+        """DomainError can be raised and caught."""
         with pytest.raises(DomainError):
             raise DomainError()
 
 
 class TestUserLoginError:
-    """Тесты для UserLoginError."""
+    """Tests for UserLoginError."""
 
     def test_inherits_from_domain_error(self) -> None:
-        """UserLoginError наследует DomainError."""
+        """UserLoginError inherits from DomainError."""
         error = UserLoginError(login="test", msg="test message")
         assert isinstance(error, DomainError)
 
     def test_stores_login_and_message(self) -> None:
-        """UserLoginError сохраняет логин и сообщение."""
+        """UserLoginError stores login and message."""
         error = UserLoginError(login="testuser", msg="invalid login")
-        
+
         assert error.login == "testuser"
         assert error.msg == "invalid login"
 
     def test_string_representation(self) -> None:
-        """Строковое представление содержит информацию."""
+        """String representation contains information."""
         error = UserLoginError(login="testuser", msg="login is too short")
-        
+
         assert "login is too short" in str(error)
         assert "testuser" in str(error)
 
 
 class TestUserPasswordError:
-    """Тесты для UserPasswordError."""
+    """Tests for UserPasswordError."""
 
     def test_inherits_from_domain_error(self) -> None:
-        """UserPasswordError наследует DomainError."""
+        """UserPasswordError inherits from DomainError."""
         error = UserPasswordError(password="***", msg="test")
         assert isinstance(error, DomainError)
 
     def test_stores_message(self) -> None:
-        """UserPasswordError сохраняет сообщение."""
+        """UserPasswordError stores message."""
         error = UserPasswordError(password="***", msg="password too weak")
-        
+
         assert error.msg == "password too weak"
 
 
 class TestUserNotFoundError:
-    """Тесты для UserNotFoundError."""
+    """Tests for UserNotFoundError."""
 
     def test_inherits_from_domain_error(self) -> None:
-        """UserNotFoundError наследует DomainError."""
+        """UserNotFoundError inherits from DomainError."""
         error = UserNotFoundError(identifier="user123")
         assert isinstance(error, DomainError)
 
     def test_stores_identifier(self) -> None:
-        """UserNotFoundError сохраняет идентификатор."""
+        """UserNotFoundError stores identifier."""
         error = UserNotFoundError(identifier="user123")
-        
+
         assert error.identifier == "user123"
         assert "user123" in str(error)
 
 
 class TestUserAlreadyExistsError:
-    """Тесты для UserAlreadyExistsError."""
+    """Tests for UserAlreadyExistsError."""
 
     def test_inherits_from_domain_error(self) -> None:
-        """UserAlreadyExistsError наследует DomainError."""
+        """UserAlreadyExistsError inherits from DomainError."""
         error = UserAlreadyExistsError(login="testuser")
         assert isinstance(error, DomainError)
 
     def test_stores_login(self) -> None:
-        """UserAlreadyExistsError сохраняет логин."""
+        """UserAlreadyExistsError stores login."""
         error = UserAlreadyExistsError(login="testuser")
-        
+
         assert error.login == "testuser"
         assert "testuser" in str(error)
 
 
 class TestUserInactiveError:
-    """Тесты для UserInactiveError."""
+    """Tests for UserInactiveError."""
 
     def test_inherits_from_domain_error(self) -> None:
-        """UserInactiveError наследует DomainError."""
+        """UserInactiveError inherits from DomainError."""
         error = UserInactiveError(user_id="123")
         assert isinstance(error, DomainError)
 
     def test_stores_user_id(self) -> None:
-        """UserInactiveError сохраняет user_id."""
+        """UserInactiveError stores user_id."""
         error = UserInactiveError(user_id="user-uuid-123")
-        
+
         assert error.user_id == "user-uuid-123"
 
 
 class TestTokenError:
-    """Тесты для TokenError."""
+    """Tests for TokenError."""
 
     def test_inherits_from_domain_error(self) -> None:
-        """TokenError наследует DomainError."""
+        """TokenError inherits from DomainError."""
         error = TokenError()
         assert isinstance(error, DomainError)
 
 
 class TestInvalidTokenError:
-    """Тесты для InvalidTokenError."""
+    """Tests for InvalidTokenError."""
 
     def test_inherits_from_token_error(self) -> None:
-        """InvalidTokenError наследует TokenError."""
+        """InvalidTokenError inherits from TokenError."""
         error = InvalidTokenError()
         assert isinstance(error, TokenError)
 
     def test_default_reason(self) -> None:
-        """InvalidTokenError имеет сообщение по умолчанию."""
+        """InvalidTokenError has default message."""
         error = InvalidTokenError()
-        
+
         assert "Invalid token" in str(error)
 
     def test_custom_reason(self) -> None:
-        """InvalidTokenError принимает кастомное сообщение."""
+        """InvalidTokenError accepts custom message."""
         error = InvalidTokenError(reason="Signature verification failed")
-        
+
         assert error.reason == "Signature verification failed"
         assert "Signature verification failed" in str(error)
 
 
 class TestTokenExpiredError:
-    """Тесты для TokenExpiredError."""
+    """Tests for TokenExpiredError."""
 
     def test_inherits_from_token_error(self) -> None:
-        """TokenExpiredError наследует TokenError."""
+        """TokenExpiredError inherits from TokenError."""
         error = TokenExpiredError()
         assert isinstance(error, TokenError)
 
     def test_message(self) -> None:
-        """TokenExpiredError имеет корректное сообщение."""
+        """TokenExpiredError has correct message."""
         error = TokenExpiredError()
-        
+
         assert "expired" in str(error).lower()
 
 
 class TestTokenRevokedError:
-    """Тесты для TokenRevokedError."""
+    """Tests for TokenRevokedError."""
 
     def test_inherits_from_token_error(self) -> None:
-        """TokenRevokedError наследует TokenError."""
+        """TokenRevokedError inherits from TokenError."""
         error = TokenRevokedError()
         assert isinstance(error, TokenError)
 
     def test_message(self) -> None:
-        """TokenRevokedError имеет корректное сообщение."""
+        """TokenRevokedError has correct message."""
         error = TokenRevokedError()
-        
+
         assert "revoked" in str(error).lower()
 
 
 class TestInvalidTokenTypeError:
-    """Тесты для InvalidTokenTypeError."""
+    """Tests for InvalidTokenTypeError."""
 
     def test_inherits_from_token_error(self) -> None:
-        """InvalidTokenTypeError наследует TokenError."""
+        """InvalidTokenTypeError inherits from TokenError."""
         error = InvalidTokenTypeError(expected="access", actual="refresh")
         assert isinstance(error, TokenError)
 
     def test_stores_expected_and_actual(self) -> None:
-        """InvalidTokenTypeError сохраняет expected и actual."""
+        """InvalidTokenTypeError stores expected and actual."""
         error = InvalidTokenTypeError(expected="access", actual="refresh")
-        
+
         assert error.expected == "access"
         assert error.actual == "refresh"
 
     def test_message(self) -> None:
-        """InvalidTokenTypeError содержит expected и actual в сообщении."""
+        """InvalidTokenTypeError contains expected and actual in message."""
         error = InvalidTokenTypeError(expected="access", actual="refresh")
-        
+
         assert "access" in str(error)
         assert "refresh" in str(error)

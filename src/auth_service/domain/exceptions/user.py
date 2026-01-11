@@ -2,7 +2,7 @@ from .base_domain import DomainError
 
 
 class UserNotFoundError(DomainError):
-    """Пользователь не найден."""
+    """User not found."""
 
     def __init__(self, identifier: str):
         self.identifier = identifier
@@ -10,7 +10,7 @@ class UserNotFoundError(DomainError):
 
 
 class UserAlreadyExistsError(DomainError):
-    """Пользователь с таким логином уже существует."""
+    """User with this login already exists."""
 
     def __init__(self, login: str):
         self.login = login
@@ -18,7 +18,7 @@ class UserAlreadyExistsError(DomainError):
 
 
 class UserInactiveError(DomainError):
-    """Пользователь деактивирован."""
+    """User is inactive."""
 
     def __init__(self, user_id: str):
         self.user_id = user_id

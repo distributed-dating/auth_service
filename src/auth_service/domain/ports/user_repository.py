@@ -5,24 +5,24 @@ from auth_service.domain.value_objects.user import UserId, UserLogin
 
 
 class UserRepository(Protocol):
-    """Порт для работы с пользователями."""
+    """Port for user operations."""
 
     async def add(self, user: User) -> None:
-        """Добавить нового пользователя."""
+        """Add a new user."""
         ...
 
     async def get_by_id(self, user_id: UserId) -> User | None:
-        """Получить пользователя по ID."""
+        """Get user by ID."""
         ...
 
     async def get_by_login(self, login: UserLogin) -> User | None:
-        """Получить пользователя по логину."""
+        """Get user by login."""
         ...
 
     async def update(self, user: User) -> None:
-        """Обновить данные пользователя."""
+        """Update user data."""
         ...
 
     async def exists_by_login(self, login: UserLogin) -> bool:
-        """Проверить существование пользователя по логину."""
+        """Check if user exists by login."""
         ...

@@ -13,4 +13,10 @@ __all__ = [
 ]
 
 from .user import UserId, UserLogin, UserPassword, HashedPassword
-from .jwt import TokenPair, TokenPayload, TokenType, AccessToken, RefreshTokenValue
+from .jwt import (
+    TokenPair,
+    TokenPayload,
+    TokenType,
+    AccessToken,
+    RefreshTokenValue,
+)

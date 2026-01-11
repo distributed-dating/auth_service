@@ -1,32 +1,38 @@
-"""Unit тесты для Domain Models."""
-
 from datetime import datetime, timezone, timedelta
 from uuid import uuid4
 
 import pytest
 
 from auth_service.domain.models import User, RefreshToken
-from auth_service.domain.value_objects.user import UserId, UserLogin, HashedPassword
+from auth_service.domain.value_objects.user import (
+    UserId,
+    UserLogin,
+    HashedPassword,
+)
 
 
 class TestUser:
-    """Тесты для User Aggregate Root."""
+    """Tests for User Aggregate Root."""
 
     @pytest.fixture
     def valid_login(self) -> UserLogin:
-        """Фикстура для валидного логина."""
+        """Fixture for valid login."""
         return UserLogin(value="testuser")
 
     @pytest.fixture
     def valid_hashed_password(self) -> HashedPassword:
-        """Фикстура для валидного хешированного пароля."""
-        return HashedPassword(value="$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/X4baN7f3v1f1h1Q1.")
+        """Fixture for valid hashed password."""
+        return HashedPassword(
+            value="$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/X4baN7f3v1f1h1Q1."
+        )
 
     def test_create_user(
         self, valid_login: UserLogin, valid_hashed_password: HashedPassword
     ) -> None:
-        """Создание пользователя через фабричный метод."""
-        user = User.create(login=valid_login, hashed_password=valid_hashed_password)
+        """Creating user via factory method."""
+        user = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
 
         assert user.login == valid_login
         assert user.hashed_password == valid_hashed_password
@@ -38,18 +44,24 @@ class TestUser:
     def test_create_user_generates_unique_ids(
         self, valid_login: UserLogin, valid_hashed_password: HashedPassword
     ) -> None:
-        """Каждый новый пользователь получает уникальный ID."""
-        user1 = User.create(login=valid_login, hashed_password=valid_hashed_password)
-        user2 = User.create(login=valid_login, hashed_password=valid_hashed_password)
+        """Each new user gets unique ID."""
+        user1 = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
+        user2 = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
 
         assert user1.id != user2.id
 
     def test_create_user_sets_timestamps(
         self, valid_login: UserLogin, valid_hashed_password: HashedPassword
     ) -> None:
-        """При создании пользователя устанавливаются временные метки."""
+        """User creation sets timestamps."""
         before = datetime.now(timezone.utc)
-        user = User.create(login=valid_login, hashed_password=valid_hashed_password)
+        user = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
         after = datetime.now(timezone.utc)
 
         assert before <= user.created_at <= after
@@ -58,8 +70,10 @@ class TestUser:
     def test_change_password(
         self, valid_login: UserLogin, valid_hashed_password: HashedPassword
     ) -> None:
-        """Смена пароля обновляет hashed_password и updated_at."""
-        user = User.create(login=valid_login, hashed_password=valid_hashed_password)
+        """Changing password updates hashed_password and updated_at."""
+        user = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
         old_updated_at = user.updated_at
 
         new_password = HashedPassword(
@@ -73,8 +87,10 @@ class TestUser:
     def test_deactivate_user(
         self, valid_login: UserLogin, valid_hashed_password: HashedPassword
     ) -> None:
-        """Деактивация пользователя."""
-        user = User.create(login=valid_login, hashed_password=valid_hashed_password)
+        """User deactivation."""
+        user = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
         assert user.is_active is True
 
         user.deactivate()
@@ -84,8 +100,10 @@ class TestUser:
     def test_activate_user(
         self, valid_login: UserLogin, valid_hashed_password: HashedPassword
     ) -> None:
-        """Активация пользователя."""
-        user = User.create(login=valid_login, hashed_password=valid_hashed_password)
+        """User activation."""
+        user = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
         user.deactivate()
         assert user.is_active is False
 
@@ -96,8 +114,10 @@ class TestUser:
     def test_deactivate_updates_timestamp(
         self, valid_login: UserLogin, valid_hashed_password: HashedPassword
     ) -> None:
-        """Деактивация обновляет updated_at."""
-        user = User.create(login=valid_login, hashed_password=valid_hashed_password)
+        """Deactivation updates updated_at."""
+        user = User.create(
+            login=valid_login, hashed_password=valid_hashed_password
+        )
         old_updated_at = user.updated_at
 
         user.deactivate()
@@ -106,32 +126,32 @@ class TestUser:
 
 
 class TestRefreshToken:
-    """Тесты для RefreshToken Entity."""
+    """Tests for RefreshToken Entity."""
 
     @pytest.fixture
     def user_id(self) -> UserId:
-        """Фикстура для UserId."""
+        """Fixture for UserId."""
         return UserId(value=uuid4())
 
     @pytest.fixture
     def token_hash(self) -> str:
-        """Фикстура для хеша токена."""
+        """Fixture for token hash."""
         return "hashed_refresh_token_value_12345"
 
     @pytest.fixture
     def future_expiry(self) -> datetime:
-        """Фикстура для будущей даты истечения."""
+        """Fixture for future expiry date."""
         return datetime.now(timezone.utc) + timedelta(days=7)
 
     @pytest.fixture
     def past_expiry(self) -> datetime:
-        """Фикстура для прошедшей даты истечения."""
+        """Fixture for past expiry date."""
         return datetime.now(timezone.utc) - timedelta(days=1)
 
     def test_create_refresh_token(
         self, user_id: UserId, token_hash: str, future_expiry: datetime
     ) -> None:
-        """Создание refresh токена через фабричный метод."""
+        """Creating refresh token via factory method."""
         token = RefreshToken.create(
             user_id=user_id,
             token_hash=token_hash,
@@ -147,7 +167,7 @@ class TestRefreshToken:
     def test_token_is_valid_when_not_expired_and_not_revoked(
         self, user_id: UserId, token_hash: str, future_expiry: datetime
     ) -> None:
-        """Токен валиден, если не истёк и не отозван."""
+        """Token is valid if not expired and not revoked."""
         token = RefreshToken.create(
             user_id=user_id,
             token_hash=token_hash,
@@ -161,7 +181,7 @@ class TestRefreshToken:
     def test_token_is_invalid_when_expired(
         self, user_id: UserId, token_hash: str, past_expiry: datetime
     ) -> None:
-        """Истёкший токен невалиден."""
+        """Expired token is invalid."""
         token = RefreshToken.create(
             user_id=user_id,
             token_hash=token_hash,
@@ -174,7 +194,7 @@ class TestRefreshToken:
     def test_revoke_token(
         self, user_id: UserId, token_hash: str, future_expiry: datetime
     ) -> None:
-        """Отзыв токена."""
+        """Token revocation."""
         token = RefreshToken.create(
             user_id=user_id,
             token_hash=token_hash,
@@ -191,7 +211,7 @@ class TestRefreshToken:
     def test_revoke_already_revoked_token_is_idempotent(
         self, user_id: UserId, token_hash: str, future_expiry: datetime
     ) -> None:
-        """Повторный отзыв токена не меняет revoked_at."""
+        """Repeated token revocation does not change revoked_at."""
         token = RefreshToken.create(
             user_id=user_id,
             token_hash=token_hash,
@@ -207,7 +227,7 @@ class TestRefreshToken:
     def test_create_generates_unique_ids(
         self, user_id: UserId, token_hash: str, future_expiry: datetime
     ) -> None:
-        """Каждый новый токен получает уникальный ID."""
+        """Each new token gets unique ID."""
         token1 = RefreshToken.create(
             user_id=user_id,
             token_hash=token_hash,

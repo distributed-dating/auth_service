@@ -4,7 +4,7 @@ from uuid import UUID
 
 @dataclass(frozen=True, slots=True)
 class UserId:
-    """Идентификатор пользователя как Value Object."""
+    """User identifier as Value Object."""
 
     value: UUID
 

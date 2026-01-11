@@ -1,5 +1,5 @@
 class DomainError(Exception):
-    """Базовое исключение для доменного слоя."""
+    """Base exception for domain layer."""
 
     def __init__(self, message: str = "Domain error occurred"):
         self.message = message

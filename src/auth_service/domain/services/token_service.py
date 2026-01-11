@@ -11,9 +11,9 @@ from auth_service.domain.exceptions import (
 
 class TokenService:
     """
-    Доменный сервис для работы с токенами.
+    Domain service for token operations.
 
-    Содержит бизнес-логику, которая не принадлежит ни одной сущности.
+    Contains business logic that doesn't belong to any single entity.
     """
 
     def __init__(
@@ -26,12 +26,12 @@ class TokenService:
 
     async def issue_tokens(self, user_id: UserId) -> TokenPair:
         """
-        Выпустить новую пару токенов для пользователя.
-        Сохраняет refresh токен в репозитории.
+        Issue a new token pair for a user.
+        Saves the refresh token in the repository.
         """
         token_pair = self._jwt_provider.create_token_pair(user_id)
 
-        # Сохраняем хеш refresh токена
+        # Save the refresh token hash
         refresh_token_hash = self._jwt_provider.hash_token(
             token_pair.refresh_token.value
         )
@@ -48,20 +48,20 @@ class TokenService:
 
     async def refresh_tokens(self, refresh_token_str: str) -> TokenPair:
         """
-        Обновить токены используя refresh токен.
+        Refresh tokens using a refresh token.
 
-        1. Валидирует refresh токен
-        2. Проверяет, что он не отозван
-        3. Отзывает старый refresh токен
-        4. Выпускает новую пару
+        1. Validates the refresh token
+        2. Checks that it's not revoked
+        3. Revokes the old refresh token
+        4. Issues a new pair
         """
-        # Декодируем токен
+        # Decode the token
         payload = self._jwt_provider.decode_refresh_token(refresh_token_str)
 
         if not payload.is_refresh_token():
             raise InvalidTokenTypeError(expected="refresh", actual="access")
 
-        # Проверяем в БД
+        # Check in the database
         token_hash = self._jwt_provider.hash_token(refresh_token_str)
         stored_token = await self._token_repository.get_by_hash(token_hash)
 
@@ -69,22 +69,24 @@ class TokenService:
             raise TokenRevokedError()
 
         if stored_token.is_revoked:
-            # Возможная атака — отзываем все токены пользователя
-            await self._token_repository.revoke_all_by_user_id(stored_token.user_id)
+            # Possible attack - revoke all user tokens
+            await self._token_repository.revoke_all_by_user_id(
+                stored_token.user_id
+            )
             raise TokenRevokedError()
 
         if stored_token.is_expired:
             raise TokenExpiredError()
 
-        # Отзываем старый токен
+        # Revoke the old token
         stored_token.revoke()
         await self._token_repository.revoke(stored_token)
 
-        # Выпускаем новую пару
+        # Issue a new pair
         return await self.issue_tokens(stored_token.user_id)
 
     async def revoke_token(self, refresh_token_str: str) -> None:
-        """Отозвать refresh токен (logout)."""
+        """Revoke refresh token (logout)."""
         token_hash = self._jwt_provider.hash_token(refresh_token_str)
         stored_token = await self._token_repository.get_by_hash(token_hash)
 
@@ -93,13 +95,13 @@ class TokenService:
             await self._token_repository.revoke(stored_token)
 
     async def revoke_all_user_tokens(self, user_id: UserId) -> None:
-        """Отозвать все токены пользователя (logout everywhere)."""
+        """Revoke all user tokens (logout everywhere)."""
         await self._token_repository.revoke_all_by_user_id(user_id)
 
     def validate_access_token(self, access_token_str: str) -> TokenPayload:
         """
-        Валидировать access токен.
-        Не требует обращения к БД — проверяется только подпись.
+        Validate access token.
+        Doesn't require database access - only signature verification.
         """
         payload = self._jwt_provider.decode_access_token(access_token_str)
 

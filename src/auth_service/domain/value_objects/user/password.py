@@ -4,7 +4,7 @@ from auth_service.domain.exceptions import UserPasswordError
 
 @dataclass(frozen=True, slots=True)
 class UserPassword:
-    """Сырой пароль пользователя (для ввода)."""
+    """Raw user password (for input)."""
 
     value: str
 
@@ -24,7 +24,7 @@ class UserPassword:
                 password="***", msg="password is too long (max 128)"
             )
 
-        # Проверка на сложность пароля
+        # Password complexity check
         has_upper = any(c.isupper() for c in self.value)
         has_lower = any(c.islower() for c in self.value)
         has_digit = any(c.isdigit() for c in self.value)

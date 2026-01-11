@@ -5,28 +5,30 @@ from auth_service.domain.value_objects.user import UserId
 
 
 class TokenRepository(Protocol):
-    """Порт для работы с refresh токенами."""
+    """Port for refresh token operations."""
 
     async def add(self, token: RefreshToken) -> None:
-        """Сохранить refresh токен."""
+        """Save refresh token."""
         ...
 
     async def get_by_hash(self, token_hash: str) -> RefreshToken | None:
-        """Получить токен по хешу."""
+        """Get token by hash."""
         ...
 
-    async def get_active_by_user_id(self, user_id: UserId) -> list[RefreshToken]:
-        """Получить все активные токены пользователя."""
+    async def get_active_by_user_id(
+        self, user_id: UserId
+    ) -> list[RefreshToken]:
+        """Get all active tokens for a user."""
         ...
 
     async def revoke(self, token: RefreshToken) -> None:
-        """Отозвать токен."""
+        """Revoke token."""
         ...
 
     async def revoke_all_by_user_id(self, user_id: UserId) -> None:
-        """Отозвать все токены пользователя (logout everywhere)."""
+        """Revoke all user tokens (logout everywhere)."""
         ...
 
     async def delete_expired(self) -> int:
-        """Удалить истекшие токены. Возвращает количество удалённых."""
+        """Delete expired tokens. Returns the number of deleted tokens."""
         ...

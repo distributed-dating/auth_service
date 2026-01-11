@@ -4,12 +4,12 @@ from auth_service.domain.value_objects.user import UserPassword, HashedPassword
 
 
 class PasswordHasher(Protocol):
-    """Порт для хеширования паролей."""
+    """Port for password hashing."""
 
     def hash(self, password: UserPassword) -> HashedPassword:
-        """Захешировать пароль."""
+        """Hash a password."""
         ...
 
     def verify(self, password: UserPassword, hashed: HashedPassword) -> bool:
-        """Проверить пароль против хеша."""
+        """Verify password against hash."""
         ...
