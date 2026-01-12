@@ -29,7 +29,9 @@ class SQLAlchemyTokenRepository(TokenRepository):
         orm = result.scalar_one_or_none()
         return token_from_orm(orm) if orm else None
 
-    async def get_active_by_user_id(self, user_id: UserId) -> list[RefreshToken]:
+    async def get_active_by_user_id(
+        self, user_id: UserId
+    ) -> list[RefreshToken]:
         now = datetime.now(timezone.utc)
         stmt = (
             select(RefreshTokenORM)
@@ -73,4 +75,3 @@ class SQLAlchemyTokenRepository(TokenRepository):
 
         await self._session.flush()
         return count
-

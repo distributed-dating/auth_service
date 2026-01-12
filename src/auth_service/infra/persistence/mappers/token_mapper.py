@@ -25,4 +25,3 @@ def token_from_orm(orm: RefreshTokenORM) -> RefreshToken:
         created_at=orm.created_at,
         revoked_at=orm.revoked_at,
     )
-

@@ -30,4 +30,3 @@ class RefreshTokenORM(Base):
     revoked_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
-

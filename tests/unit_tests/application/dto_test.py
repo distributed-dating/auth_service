@@ -6,7 +6,14 @@ from uuid import uuid4
 import pytest
 
 from auth_service.application.dto import UserDTO, TokenPairDTO
-from auth_service.domain import User, UserLogin, HashedPassword, AccessToken, RefreshTokenValue, TokenPair
+from auth_service.domain import (
+    User,
+    UserLogin,
+    HashedPassword,
+    AccessToken,
+    RefreshTokenValue,
+    TokenPair,
+)
 
 
 class TestUserDTO:
@@ -63,8 +70,12 @@ class TestTokenPairDTO:
 
         assert dto.access_token == token_pair.access_token.value
         assert dto.refresh_token == token_pair.refresh_token.value
-        assert dto.access_token_expires_at == token_pair.access_token.expires_at
-        assert dto.refresh_token_expires_at == token_pair.refresh_token.expires_at
+        assert (
+            dto.access_token_expires_at == token_pair.access_token.expires_at
+        )
+        assert (
+            dto.refresh_token_expires_at == token_pair.refresh_token.expires_at
+        )
 
     def test_is_frozen(self, token_pair: TokenPair) -> None:
         """DTO should be immutable."""

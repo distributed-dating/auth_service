@@ -274,7 +274,9 @@ class TestLogoutUserProcessor:
 
         await processor.execute(command)
 
-        token_service.revoke_token.assert_called_once_with("refresh.token.value")
+        token_service.revoke_token.assert_called_once_with(
+            "refresh.token.value"
+        )
 
 
 class TestRefreshTokensProcessor:

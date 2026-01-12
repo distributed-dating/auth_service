@@ -30,4 +30,3 @@ def user_from_orm(orm: UserORM) -> User:
         created_at=orm.created_at,
         updated_at=orm.updated_at,
     )
-

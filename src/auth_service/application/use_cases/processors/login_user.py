@@ -7,7 +7,10 @@ from auth_service.domain import (
 )
 from auth_service.application.dto import TokenPairDTO
 from auth_service.application.use_cases.commands import UserLoginCommand
-from auth_service.application.exceptions import InvalidCredentialsError, UserInactiveError
+from auth_service.application.exceptions import (
+    InvalidCredentialsError,
+    UserInactiveError,
+)
 
 
 class LoginUserProcessor:

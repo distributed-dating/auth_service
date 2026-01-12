@@ -8,5 +8,7 @@ class RefreshTokensProcessor:
         self._token_service = token_service
 
     async def execute(self, command: RefreshTokensCommand) -> TokenPairDTO:
-        token_pair = await self._token_service.refresh_tokens(command.refresh_token)
+        token_pair = await self._token_service.refresh_tokens(
+            command.refresh_token
+        )
         return TokenPairDTO.from_domain(token_pair)

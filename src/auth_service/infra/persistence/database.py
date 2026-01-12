@@ -15,6 +15,7 @@ from auth_service.infra.config import Settings
 
 class Base(DeclarativeBase):
     """Base class for all ORM models."""
+
     pass
 
 

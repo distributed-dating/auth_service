@@ -22,7 +22,11 @@ __all__ = [
 ]
 
 from .dto import UserDTO, TokenPairDTO
-from .exceptions import ApplicationError, InvalidCredentialsError, UserInactiveError
+from .exceptions import (
+    ApplicationError,
+    InvalidCredentialsError,
+    UserInactiveError,
+)
 from .use_cases import (
     RegisterUserCommand,
     UserLoginCommand,
