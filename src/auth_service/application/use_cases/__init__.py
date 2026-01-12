@@ -5,14 +5,12 @@ __all__ = [
     "LogoutUserCommand",
     "RefreshTokensCommand",
     # Queries
-    "GetCurrentUserQuery",
     "VerifyTokenQuery",
     # Processors
     "RegisterUserProcessor",
     "LoginUserProcessor",
     "LogoutUserProcessor",
     "RefreshTokensProcessor",
-    "GetCurrentUserProcessor",
     "VerifyTokenProcessor",
 ]
 
@@ -22,12 +20,11 @@ from .commands import (
     LogoutUserCommand,
     RefreshTokensCommand,
 )
-from .queries import GetCurrentUserQuery, VerifyTokenQuery
+from .queries import VerifyTokenQuery
 from .processors import (
     RegisterUserProcessor,
     LoginUserProcessor,
     LogoutUserProcessor,
     RefreshTokensProcessor,
-    GetCurrentUserProcessor,
     VerifyTokenProcessor,
 )

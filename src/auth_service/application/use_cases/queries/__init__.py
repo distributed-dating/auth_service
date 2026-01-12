@@ -1,4 +1,3 @@
-__all__ = ["GetCurrentUserQuery", "VerifyTokenQuery"]
+__all__ = ["VerifyTokenQuery"]
 
-from .get_current_user import GetCurrentUserQuery
 from .verify_token import VerifyTokenQuery

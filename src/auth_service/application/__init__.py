@@ -12,14 +12,12 @@ __all__ = [
     "LogoutUserCommand",
     "RefreshTokensCommand",
     # Queries
-    "GetCurrentUserQuery",
     "VerifyTokenQuery",
     # Processors
     "RegisterUserProcessor",
     "LoginUserProcessor",
     "LogoutUserProcessor",
     "RefreshTokensProcessor",
-    "GetCurrentUserProcessor",
     "VerifyTokenProcessor",
 ]
 
@@ -30,12 +28,10 @@ from .use_cases import (
     UserLoginCommand,
     LogoutUserCommand,
     RefreshTokensCommand,
-    GetCurrentUserQuery,
     VerifyTokenQuery,
     RegisterUserProcessor,
     LoginUserProcessor,
     LogoutUserProcessor,
     RefreshTokensProcessor,
-    GetCurrentUserProcessor,
     VerifyTokenProcessor,
 )

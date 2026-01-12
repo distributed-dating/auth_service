@@ -15,8 +15,6 @@ from auth_service.application import (
     LogoutUserProcessor,
     RefreshTokensCommand,
     RefreshTokensProcessor,
-    GetCurrentUserQuery,
-    GetCurrentUserProcessor,
     VerifyTokenQuery,
     VerifyTokenProcessor,
     InvalidCredentialsError,
@@ -321,59 +319,6 @@ class TestRefreshTokensProcessor:
 
         assert result.access_token == token_pair.access_token.value
         assert result.refresh_token == token_pair.refresh_token.value
-
-
-class TestGetCurrentUserProcessor:
-    """Tests for GetCurrentUserProcessor."""
-
-    @pytest.fixture
-    def user(self) -> User:
-        """Create test user."""
-        user = User.create(
-            login=UserLogin("testuser"),
-            hashed_password=HashedPassword(
-                "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/X4baN7f3v1f1h1Q1."
-            ),
-        )
-        user.pull_events()
-        return user
-
-    @pytest.fixture
-    def user_repository(self, user: User) -> AsyncMock:
-        """Mock user repository."""
-        repo = AsyncMock()
-        repo.get_by_id = AsyncMock(return_value=user)
-        return repo
-
-    @pytest.fixture
-    def processor(self, user_repository: AsyncMock) -> GetCurrentUserProcessor:
-        """Create processor with mocks."""
-        return GetCurrentUserProcessor(user_repository=user_repository)
-
-    async def test_get_current_user_success(
-        self,
-        processor: GetCurrentUserProcessor,
-        user: User,
-    ) -> None:
-        """Should return user DTO."""
-        query = GetCurrentUserQuery(user_id=user.id.value)
-
-        result = await processor.execute(query)
-
-        assert result.id == user.id.value
-        assert result.login == user.login.value
-
-    async def test_get_current_user_not_found(
-        self,
-        processor: GetCurrentUserProcessor,
-        user_repository: AsyncMock,
-    ) -> None:
-        """Should raise UserNotFoundError if user not found."""
-        user_repository.get_by_id = AsyncMock(return_value=None)
-        query = GetCurrentUserQuery(user_id=uuid4())
-
-        with pytest.raises(UserNotFoundError):
-            await processor.execute(query)
 
 
 class TestVerifyTokenProcessor:
