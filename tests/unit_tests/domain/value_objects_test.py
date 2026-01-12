@@ -9,7 +9,7 @@ from auth_service.domain.value_objects.user import (
     UserPassword,
     HashedPassword,
 )
-from auth_service.domain.value_objects.jwt import (
+from auth_service.domain.value_objects.token_vo import (
     TokenType,
     AccessToken,
     RefreshTokenValue,

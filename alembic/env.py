@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 
 from alembic import context
 
-from auth_service.infra import Base, Settings
+from auth_service.infra import Base, PostgresSettings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -38,7 +38,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    settings = Settings()  # ← ИСПРАВЛЕНО: создаём экземпляр
+    settings = PostgresSettings()
     url = settings.database_url  # ← ИСПРАВЛЕНО: используем экземпляр
     context.configure(
         url=url,
@@ -58,7 +58,7 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    settings = Settings()  # ← ДОБАВЛЕНО: создаём экземпляр
+    settings = PostgresSettings()
 
     # Используем Settings вместо alembic.ini
     connectable = create_async_engine(

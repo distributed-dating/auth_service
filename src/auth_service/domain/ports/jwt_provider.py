@@ -1,7 +1,7 @@
 from typing import Protocol
 
 from auth_service.domain.value_objects.user import UserId
-from auth_service.domain.value_objects.jwt import TokenPair, TokenPayload
+from auth_service.domain.value_objects.token_vo import TokenPair, TokenPayload
 
 
 class JwtProvider(Protocol):

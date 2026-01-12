@@ -3,7 +3,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Settings(BaseSettings):
+class PostgresSettings(BaseSettings):
     """Service settings loaded from environment."""
 
     model_config = SettingsConfigDict(

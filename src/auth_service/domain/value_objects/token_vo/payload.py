@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from uuid import UUID
 
-from auth_service.domain.value_objects.jwt.token import TokenType
+from auth_service.domain.value_objects.token_vo.token import TokenType
 
 
 @dataclass(frozen=True, slots=True)

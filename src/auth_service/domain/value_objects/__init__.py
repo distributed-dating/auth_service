@@ -13,7 +13,7 @@ __all__ = [
 ]
 
 from .user import UserId, UserLogin, UserPassword, HashedPassword
-from .jwt import (
+from .token_vo import (
     TokenPair,
     TokenPayload,
     TokenType,

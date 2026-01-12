@@ -1,5 +1,9 @@
 """Infrastructure configuration."""
 
-__all__ = ["Settings"]
+__all__ = [
+    "RabbitMQSettings",
+    "PostgresSettings",
+]
 
-from .settings import Settings
+from .rmq_settings import RabbitMQSettings
+from .postgres_settings import PostgresSettings

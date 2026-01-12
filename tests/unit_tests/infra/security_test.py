@@ -6,7 +6,7 @@ from uuid import uuid4
 import pytest
 
 from auth_service.domain import UserPassword, HashedPassword, UserId
-from auth_service.domain.value_objects.jwt import TokenType
+from auth_service.domain.value_objects.token_vo import TokenType
 from auth_service.domain.exceptions import TokenExpiredError, InvalidTokenError
 from auth_service.infra.security import BcryptPasswordHasher, PyJwtProvider
 

@@ -6,7 +6,7 @@ import pytest
 from auth_service.domain.services.token_service import TokenService
 from auth_service.domain.models import RefreshToken
 from auth_service.domain.value_objects.user import UserId
-from auth_service.domain.value_objects.jwt import (
+from auth_service.domain.value_objects.token_vo import (
     TokenType,
     TokenPair,
     TokenPayload,

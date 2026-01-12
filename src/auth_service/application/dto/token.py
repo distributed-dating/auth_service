@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from auth_service.domain.value_objects.jwt import TokenPair
+from auth_service.domain.value_objects.token_vo import TokenPair
 
 
 @dataclass(frozen=True)

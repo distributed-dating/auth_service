@@ -24,7 +24,7 @@ __all__ = [
 
 from .models import User, RefreshToken
 from .value_objects.user import UserId, UserLogin, UserPassword, HashedPassword
-from .value_objects.jwt import (
+from .value_objects.token_vo import (
     TokenPair,
     TokenPayload,
     AccessToken,

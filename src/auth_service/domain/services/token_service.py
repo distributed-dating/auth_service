@@ -1,6 +1,6 @@
 from auth_service.domain.models import RefreshToken
 from auth_service.domain.value_objects.user import UserId
-from auth_service.domain.value_objects.jwt import TokenPair, TokenPayload
+from auth_service.domain.value_objects.token_vo import TokenPair, TokenPayload
 from auth_service.domain.ports import JwtProvider, TokenRepository
 from auth_service.domain.exceptions import (
     TokenExpiredError,

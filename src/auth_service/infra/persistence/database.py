@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.orm import DeclarativeBase
 
-from auth_service.infra.config import Settings
+from auth_service.infra.config import PostgresSettings
 
 
 class Base(DeclarativeBase):
@@ -22,7 +22,7 @@ class Base(DeclarativeBase):
 class Database:
     """Database connection manager."""
 
-    def __init__(self, settings: Settings) -> None:
+    def __init__(self, settings: PostgresSettings) -> None:
         self._settings = settings
         self._engine = create_async_engine(
             settings.database_url,

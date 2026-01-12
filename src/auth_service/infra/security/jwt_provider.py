@@ -8,7 +8,7 @@ import jwt
 
 from auth_service.domain.exceptions import InvalidTokenError, TokenExpiredError
 from auth_service.domain.ports import JwtProvider
-from auth_service.domain.value_objects.jwt import (
+from auth_service.domain.value_objects.token_vo import (
     AccessToken,
     RefreshTokenValue,
     TokenPair,
