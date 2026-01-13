@@ -105,11 +105,9 @@ class SecurityProvider(Provider):
         return BcryptPasswordHasher()
 
     @provide(scope=Scope.APP)
-    def get_jwt_provider(
-        self,
-    ) -> JwtProvider:
+    def get_jwt_provider(self, settings: PyJwtSettings) -> JwtProvider:
         """Provide PyJwtProvider."""
-        return PyJwtProvider()
+        return PyJwtProvider(settings)
 
 
 class MessagingProvider(Provider):
