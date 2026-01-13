@@ -74,9 +74,12 @@ def run_migrations_online() -> None:
                 )
             )
             async with connection.begin():
-                await connection.run_sync(lambda conn: context.run_migrations())
+                await connection.run_sync(
+                    lambda conn: context.run_migrations()
+                )
 
     import asyncio
+
     asyncio.run(run_async_migrations())
 
 
