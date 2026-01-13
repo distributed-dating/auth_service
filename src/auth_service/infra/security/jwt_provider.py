@@ -1,7 +1,10 @@
 """PyJWT implementation of JwtProvider."""
 
+import os
 import hashlib
 from datetime import datetime, timedelta, timezone
+from re import I
+from tkinter import N
 from uuid import UUID, uuid4
 
 import jwt
@@ -23,11 +26,17 @@ class PyJwtProvider(JwtProvider):
 
     def __init__(
         self,
-        secret_key: str,
         access_token_ttl_minutes: int = 15,
         refresh_token_ttl_days: int = 7,
+        secret_key: str | None = None,
         algorithm: str = "HS256",
     ) -> None:
+        if secret_key is None:
+            secret_key = os.getenv("SECRET_KEY")
+
+        if secret_key is None:
+            raise Exception("SECRET_KEY doesn't set")
+
         self._secret_key = secret_key
         self._access_token_ttl = timedelta(minutes=access_token_ttl_minutes)
         self._refresh_token_ttl = timedelta(days=refresh_token_ttl_days)
