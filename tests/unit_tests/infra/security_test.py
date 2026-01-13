@@ -88,8 +88,7 @@ class TestPyJwtProvider:
     @pytest.fixture
     def provider(self) -> PyJwtProvider:
         """Create JWT provider."""
-
-        settings = PyJwtSettings()
+        settings = PyJwtSettings(secret_key="test-secret-key-for-testing")
         return PyJwtProvider(settings)
 
     @pytest.fixture

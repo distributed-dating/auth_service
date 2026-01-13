@@ -69,7 +69,7 @@ class InfrastructureProvider(Provider):
     async def get_rabbitmq_broker(
         self,
         rabbitmq_settings: RabbitMQSettings,
-    ):
+    ) -> RabbitBroker:
         """Provide RabbitMQ broker."""
         broker = create_rabbitmq_broker(rabbitmq_settings)
         await broker.start()  # Подключаем брокер
