@@ -18,7 +18,11 @@ from auth_service.application.use_cases.processors import (
     RefreshTokensProcessor,
     VerifyTokenProcessor,
 )
-from auth_service.infra.config import PostgresSettings, RabbitMQSettings
+from auth_service.infra.config import (
+    PostgresSettings,
+    RabbitMQSettings,
+    PyJwtSettings,
+)
 from auth_service.infra.persistence import (
     Database,
     SQLAlchemyUserRepository,
@@ -43,6 +47,11 @@ class SettingsProvider(Provider):
     def get_rabbitmq_settings(self) -> RabbitMQSettings:
         """Provide RabbitMQSettings."""
         return RabbitMQSettings()
+
+    @provide(scope=Scope.APP)
+    def get_pyjwt_settings(self) -> PyJwtSettings:
+        """Provide RabbitMQSettings."""
+        return PyJwtSettings()
 
 
 class InfrastructureProvider(Provider):

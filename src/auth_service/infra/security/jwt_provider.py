@@ -19,28 +19,21 @@ from auth_service.domain.value_objects.token_vo import (
     TokenType,
 )
 from auth_service.domain.value_objects.user import UserId
+from auth_service.infra.config import PyJwtSettings
 
 
 class PyJwtProvider(JwtProvider):
     """PyJWT implementation of JwtProvider."""
 
-    def __init__(
-        self,
-        access_token_ttl_minutes: int = 15,
-        refresh_token_ttl_days: int = 7,
-        secret_key: str | None = None,
-        algorithm: str = "HS256",
-    ) -> None:
-        if secret_key is None:
-            secret_key = os.getenv("SECRET_KEY")
-
-        if secret_key is None:
-            raise Exception("SECRET_KEY doesn't set")
-
-        self._secret_key = secret_key
-        self._access_token_ttl = timedelta(minutes=access_token_ttl_minutes)
-        self._refresh_token_ttl = timedelta(days=refresh_token_ttl_days)
-        self._algorithm = algorithm
+    def __init__(self, settings: PyJwtSettings) -> None:
+        self._secret_key = settings.secret_key
+        self._access_token_ttl = timedelta(
+            minutes=settings.access_token_ttl_minutes
+        )
+        self._refresh_token_ttl = timedelta(
+            days=settings.refresh_token_ttl_days
+        )
+        self._algorithm = settings.algorithm
 
     def create_token_pair(self, user_id: UserId) -> TokenPair:
         """Create a pair of access + refresh tokens."""

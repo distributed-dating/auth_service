@@ -9,6 +9,7 @@ from auth_service.domain import UserPassword, HashedPassword, UserId
 from auth_service.domain.value_objects.token_vo import TokenType
 from auth_service.domain.exceptions import TokenExpiredError, InvalidTokenError
 from auth_service.infra.security import BcryptPasswordHasher, PyJwtProvider
+from auth_service.infra.config import PyJwtSettings
 
 
 class TestBcryptPasswordHasher:
@@ -87,11 +88,9 @@ class TestPyJwtProvider:
     @pytest.fixture
     def provider(self) -> PyJwtProvider:
         """Create JWT provider."""
-        return PyJwtProvider(
-            secret_key="test-secret-key",
-            access_token_ttl_minutes=15,
-            refresh_token_ttl_days=7,
-        )
+
+        settings = PyJwtSettings()
+        return PyJwtProvider(settings)
 
     @pytest.fixture
     def user_id(self) -> UserId:
@@ -168,9 +167,11 @@ class TestPyJwtProvider:
 
     def test_decode_expired_token_raises_error(self) -> None:
         """decode_access_token() should raise TokenExpiredError for expired token."""
+        settings = PyJwtSettings(
+            secret_key="secret-1", access_token_ttl_minutes=-1
+        )
         provider = PyJwtProvider(
-            secret_key="test-secret-key",
-            access_token_ttl_minutes=-1,  # Already expired
+            settings=settings  # Already expired
         )
         user_id = UserId(uuid4())
         token_pair = provider.create_token_pair(user_id)
@@ -182,8 +183,10 @@ class TestPyJwtProvider:
         self, user_id: UserId
     ) -> None:
         """decode_access_token() should raise InvalidTokenError for wrong secret."""
-        provider1 = PyJwtProvider(secret_key="secret-1")
-        provider2 = PyJwtProvider(secret_key="secret-2")
+        settings1 = PyJwtSettings(secret_key="secret-1")
+        settings2 = PyJwtSettings(secret_key="secret-2")
+        provider1 = PyJwtProvider(settings1)
+        provider2 = PyJwtProvider(settings2)
 
         token_pair = provider1.create_token_pair(user_id)
 
