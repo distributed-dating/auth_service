@@ -1,10 +1,7 @@
 """PyJWT implementation of JwtProvider."""
 
-import os
 import hashlib
 from datetime import datetime, timedelta, timezone
-from re import I
-from tkinter import N
 from uuid import UUID, uuid4
 
 import jwt
