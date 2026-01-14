@@ -40,6 +40,14 @@ class TestRegisterUserProcessor:
     """Tests for RegisterUserProcessor."""
 
     @pytest.fixture
+    def transaction_manager(self) -> AsyncMock:
+        """Mock transaction manager."""
+        manager = AsyncMock()
+        manager.commit = AsyncMock()
+        manager.rollback = AsyncMock()
+        return manager
+
+    @pytest.fixture
     def user_repository(self) -> AsyncMock:
         """Mock user repository."""
         repo = AsyncMock()
@@ -68,12 +76,14 @@ class TestRegisterUserProcessor:
     @pytest.fixture
     def processor(
         self,
+        transaction_manager: AsyncMock,
         user_repository: AsyncMock,
         password_hasher: Mock,
         event_publisher: AsyncMock,
     ) -> RegisterUserProcessor:
         """Create processor with mocks."""
         return RegisterUserProcessor(
+            transaction_manager=transaction_manager,
             user_repository=user_repository,
             password_hasher=password_hasher,
             event_publisher=event_publisher,
@@ -128,6 +138,14 @@ class TestRegisterUserProcessor:
 
 class TestLoginUserProcessor:
     """Tests for LoginUserProcessor."""
+
+    @pytest.fixture
+    def transaction_manager(self) -> AsyncMock:
+        """Mock transaction manager."""
+        manager = AsyncMock()
+        manager.commit = AsyncMock()
+        manager.rollback = AsyncMock()
+        return manager
 
     @pytest.fixture
     def active_user(self) -> User:
@@ -187,12 +205,14 @@ class TestLoginUserProcessor:
     @pytest.fixture
     def processor(
         self,
+        transaction_manager: AsyncMock,
         user_repository: AsyncMock,
         password_hasher: Mock,
         token_service: AsyncMock,
     ) -> LoginUserProcessor:
         """Create processor with mocks."""
         return LoginUserProcessor(
+            transaction_manager=transaction_manager,
             user_repository=user_repository,
             password_hasher=password_hasher,
             token_service=token_service,
@@ -253,6 +273,14 @@ class TestLogoutUserProcessor:
     """Tests for LogoutUserProcessor."""
 
     @pytest.fixture
+    def transaction_manager(self) -> AsyncMock:
+        """Mock transaction manager."""
+        manager = AsyncMock()
+        manager.commit = AsyncMock()
+        manager.rollback = AsyncMock()
+        return manager
+
+    @pytest.fixture
     def token_service(self) -> AsyncMock:
         """Mock token service."""
         service = AsyncMock()
@@ -260,9 +288,16 @@ class TestLogoutUserProcessor:
         return service
 
     @pytest.fixture
-    def processor(self, token_service: AsyncMock) -> LogoutUserProcessor:
+    def processor(
+        self,
+        transaction_manager: AsyncMock,
+        token_service: AsyncMock,
+    ) -> LogoutUserProcessor:
         """Create processor with mocks."""
-        return LogoutUserProcessor(token_service=token_service)
+        return LogoutUserProcessor(
+            transaction_manager=transaction_manager,
+            token_service=token_service,
+        )
 
     async def test_logout_success(
         self,
@@ -281,6 +316,14 @@ class TestLogoutUserProcessor:
 
 class TestRefreshTokensProcessor:
     """Tests for RefreshTokensProcessor."""
+
+    @pytest.fixture
+    def transaction_manager(self) -> AsyncMock:
+        """Mock transaction manager."""
+        manager = AsyncMock()
+        manager.commit = AsyncMock()
+        manager.rollback = AsyncMock()
+        return manager
 
     @pytest.fixture
     def token_pair(self) -> TokenPair:
@@ -305,9 +348,16 @@ class TestRefreshTokensProcessor:
         return service
 
     @pytest.fixture
-    def processor(self, token_service: AsyncMock) -> RefreshTokensProcessor:
+    def processor(
+        self,
+        transaction_manager: AsyncMock,
+        token_service: AsyncMock,
+    ) -> RefreshTokensProcessor:
         """Create processor with mocks."""
-        return RefreshTokensProcessor(token_service=token_service)
+        return RefreshTokensProcessor(
+            transaction_manager=transaction_manager,
+            token_service=token_service,
+        )
 
     async def test_refresh_tokens_success(
         self,

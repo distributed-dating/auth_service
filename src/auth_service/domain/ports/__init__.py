@@ -6,6 +6,7 @@ __all__ = [
     "PasswordHasher",
     "JwtProvider",
     "EventPublisher",
+    "TransactionManager",
 ]
 
 from .user_repository import UserRepository
@@ -13,3 +14,4 @@ from .token_repository import TokenRepository
 from .password_hasher import PasswordHasher
 from .jwt_provider import JwtProvider
 from .event_publisher import EventPublisher
+from .transaction_manager import TransactionManager

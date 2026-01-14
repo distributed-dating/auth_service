@@ -7,6 +7,7 @@ from auth_service.domain import (
     UserLogin,
     UserPassword,
     UserAlreadyExistsError,
+    TransactionManager,
 )
 from auth_service.application.use_cases.commands import RegisterUserCommand
 
@@ -14,6 +15,7 @@ from auth_service.application.use_cases.commands import RegisterUserCommand
 class RegisterUserProcessor:
     def __init__(
         self,
+        transaction_manager: TransactionManager,
         user_repository: UserRepository,
         password_hasher: PasswordHasher,
         event_publisher: EventPublisher,
@@ -21,6 +23,7 @@ class RegisterUserProcessor:
         self._user_repository = user_repository
         self._password_hasher = password_hasher
         self._event_publisher = event_publisher
+        self._transaction_manager = transaction_manager
 
     async def execute(self, command: RegisterUserCommand) -> UserDTO:
         login = UserLogin(command.login)
@@ -34,6 +37,8 @@ class RegisterUserProcessor:
         user = User.create(login=login, hashed_password=hashed_password)
 
         await self._user_repository.add(user)
+
+        await self._transaction_manager.commit()
 
         events = user.pull_events()
         await self._event_publisher.publish_many(events)

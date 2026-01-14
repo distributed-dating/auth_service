@@ -1,5 +1,6 @@
 from auth_service.domain import (
     TokenService,
+    TransactionManager,
     UserRepository,
     PasswordHasher,
     UserLogin,
@@ -16,10 +17,12 @@ from auth_service.application.exceptions import (
 class LoginUserProcessor:
     def __init__(
         self,
+        transaction_manager: TransactionManager,
         user_repository: UserRepository,
         password_hasher: PasswordHasher,
         token_service: TokenService,
     ) -> None:
+        self._transaction_manager = transaction_manager
         self._user_repository = user_repository
         self._password_hasher = password_hasher
         self._token_service = token_service
@@ -39,5 +42,6 @@ class LoginUserProcessor:
             raise InvalidCredentialsError()
 
         token_pair = await self._token_service.issue_tokens(user.id)
+        await self._transaction_manager.commit()
 
         return TokenPairDTO.from_domain(token_pair)

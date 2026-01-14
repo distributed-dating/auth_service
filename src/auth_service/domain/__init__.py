@@ -17,6 +17,7 @@ __all__ = [
     "TokenRepository",
     "PasswordHasher",
     "JwtProvider",
+    "TransactionManager",
     # Services
     "TokenService",
     "EventPublisher",
@@ -37,6 +38,7 @@ from .ports import (
     PasswordHasher,
     JwtProvider,
     EventPublisher,
+    TransactionManager,
 )
 from .services.token_service import TokenService
 from .exceptions import *

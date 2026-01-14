@@ -49,6 +49,7 @@ async def register_user(
         login=request.login, password=request.password
     )
     user_dto = await processor.execute(command)
+
     return UserResponse(
         id=user_dto.id,
         login=user_dto.login,
